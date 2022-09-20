@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
-import configData from "./config.json";
-import Login from './components/Login';
-import Logout from './components/Logout';
-import Profile from './components/Profile';
+import React from 'react';
+import Body from './components/Body';
+import Header from './components/Header';
 
 function App() {
  
   return (
     <>
-      <Login />
-      <Logout />
-      <Profile />
+      <Header />  
+      <Body /> 
+         
     </>
   );
 }

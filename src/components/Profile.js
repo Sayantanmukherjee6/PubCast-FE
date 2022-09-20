@@ -1,17 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
+import React, {useEffect} from 'react';
+import Token from './Token';
 
 const Profile = () => {
-  const { user, isAuthenticated } = useAuth0();
-  const {getAccessTokenSilently}= useAuth0();
-  const [token, settoken] = useState(null);
-
-  useEffect(() => {
-    (async() => {
-      const aToken = await getAccessTokenSilently();
-      settoken(aToken)
-    })();
-  },[])
+  const [token, user, isAuthenticated]= Token();
 
   useEffect(() => {
     if (token != null) {
@@ -26,13 +17,12 @@ const Profile = () => {
         .catch(error => console.error(error))
       console.log("added user")
     }
-
   },[token])
 
   return (
     isAuthenticated && ( 
      <div>
-       <h1>{user.nickname}</h1>
+       <h3>{user.nickname}</h3>
       </div>
     )
   )
