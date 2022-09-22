@@ -19,10 +19,15 @@ function Post() {
         console.log("added post")
       }
   }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    postRef.current.value= null
+  };
   
     return (
         <div className="createPostComponent">
-          <form className="createPostComponent__form">
+          <form className="createPostComponent__form" onSubmit={onSubmit}>
             <input
               placeholder="type something.."
               className="createPostComponent__input"

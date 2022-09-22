@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import Post from './Post';
+import PostList from './PostList';
 
 
 function Body() {
@@ -9,6 +10,7 @@ function Body() {
     isAuthenticated && ( 
     <div>
         <Post/>
+        <PostList />
     </div>
   )
   )
