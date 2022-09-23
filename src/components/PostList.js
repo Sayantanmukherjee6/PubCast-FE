@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Token from './Token';
 
 function PostList() {
     const [token, user, isAuthenticated]= Token();
     const [allPost, setallPost] = useState([]);
+    const [somePost, setsomePost] = useState([]);
+    const maxPost= 4;
+    var allPostLength = 0
+    let arrayForHoldingPosts = []
+    const ref = useRef(maxPost)
 
     useEffect(() => {
         if (token != null) {
@@ -13,25 +18,51 @@ function PostList() {
                 }
             });
             eventSource.onmessage = result => {
-                setallPost(...[JSON.parse(result.data)])
+                if (JSON.parse(result.data).length > allPostLength) {
+                    allPostLength= JSON.parse(result.data).length
+                    setallPost(...[JSON.parse(result.data)])
+                }                
 
             };
+
             eventSource.onerror = err => {
                 console.log('EventSource error: ', err);
             };
         }
     },[token])
 
-  return (
-    <div>
-        {allPost.map((eachPost) => (
-            <><tr>
+    const loopWithSlice = (start, end) => {
+        const slicedPosts = allPost.slice(start, end)
+        arrayForHoldingPosts = arrayForHoldingPosts.concat(slicedPosts)
+        setsomePost(arrayForHoldingPosts)
+      }
+
+    useEffect(() => {
+        loopWithSlice(0, maxPost)
+    },[allPost])
+
+    const handleShowMorePosts = () => {
+        loopWithSlice(ref.current, ref.current + maxPost)
+        ref.current += maxPost
+      }
+
+    const DisplayData = () => (
+        somePost.map((eachPost) => (
+            <div>
+                <tr>
                 <th><h4>{eachPost.email}</h4></th>
             </tr><tr>
                     <td>{eachPost.post}</td>
                     <td>{eachPost.createdDate.replace('T', ' ').split('.')[0]}</td>
-                </tr></>
-        ))}
+                </tr>
+                </div>
+        ))
+    )
+
+  return (
+    <div>
+        {DisplayData()}
+        <button onClick={handleShowMorePosts}>Load previous</button>
     </div>
   )
 }
